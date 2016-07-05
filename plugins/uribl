@@ -96,6 +96,9 @@ use Qpsmtpd::Constants;
 
 use Time::HiRes qw(time);
 use IO::Select;
+use Data::Validate::Domain;
+
+my $v = Data::Validate::Domain->new;
 
 # ccTLDs that allocate domain names within a strict two-level hierarchy,
 # as in *.co.uk
@@ -347,7 +350,7 @@ sub lookup_start {
                 museum|name|net|org|pro|tel|travel|
                 [a-zA-Z]{2})
             )(?!\w)        
-            }gix
+            }gix && $v->is_domain($1)
               )
         {
             my $host = lc $1;
@@ -392,7 +395,7 @@ sub lookup_start {
                 museum|name|net|org|pro|tel|travel|
                 [a-zA-Z]{2})
             )
-            }gix
+            }gix && $v->is_domain($1)
               )
         {
             my $host = lc $1;
